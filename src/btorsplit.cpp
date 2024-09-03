@@ -76,10 +76,26 @@ split_file(std::string infilename, bool overwrite)
   std::string line;
   while (std::getline(infile, line))
   {
-    pos = line.find("bad");
-    if (pos != line.npos)
+    if (!line.empty () && std::isdigit (line[0]))
     {
-      bad.insert(lines.size());
+      size_t i    = 0;
+      size_t size = line.size();
+      // Skip id
+      while (i < size && std::isdigit (line[i]))
+      {
+        ++i;
+      }
+      // Skip spaces
+      while (i < size && std::isspace (line[i]))
+      {
+        ++i;
+      }
+
+      if (i + 3 < size && line[i] == 'b' && line[i + 1] == 'a'
+          && line[i + 2] == 'd' && std::isspace(line[i + 3]))
+      {
+        bad.insert(lines.size());
+      }
     }
     lines.push_back(line);
   }
