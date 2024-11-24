@@ -423,6 +423,7 @@ add_state_to_aiger (Btor *btor,
         reset_val = init_bits ? init_bits[i] : state_bits[i];
         aiger_add_reset (aig, state_bits[i], reset_val);
       } else {
+        aiger_add_reset (aig, state_bits[i], state_bits[i]);
         init_constrains.push_back(std::make_pair(state_bits[i], init_bits[i]));
       }
     }
