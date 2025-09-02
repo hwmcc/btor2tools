@@ -1661,8 +1661,16 @@ parse_input_part (int64_t k)
       BtorSimBitVector *val = btorsim_bv_char_to_bv (constant.start);
       lineno++;
       charno = saved_charno;
-      BtorSimArrayModel *am =
-          current_state[input->id].array_state->write (idx, val);
+
+      BtorSimArrayModel *am = nullptr;
+      if (!current_state[input->id].array_state)
+      {
+        am = new BtorSimArrayModel (idx->width, val->width);
+      }
+      else
+      {
+        am = current_state[input->id].array_state->write (idx, val);
+      }
       update_current_state (input->id, am);
     }
   }
