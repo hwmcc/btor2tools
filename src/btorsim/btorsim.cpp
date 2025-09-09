@@ -1407,13 +1407,11 @@ parse_state_part (int64_t k)
     }
     else
     {
-      if BTOR2_EMPTY_STACK (array_index)
-      /* pono trace compatibility: pono represents 'initialize all array
-       * elements' as <id> <value> (same syntax as for vector assignment, but
-       * id is for a state of sort array) */
+      assert (state->sort.tag == BTOR2_TAG_SORT_array);
+      if (BTOR2_EMPTY_STACK (array_index))
       {
-        BTOR2_PUSH_STACK (array_index, '*');
-        BTOR2_PUSH_STACK (array_index, 0);
+        parse_error ("expected array index assignment for state '%" PRId64 "'",
+                     state_pos);
       }
       if (BTOR2_EMPTY_STACK (symbol))
       {
@@ -1434,7 +1432,6 @@ parse_state_part (int64_t k)
              symbol.start,
              k);
       }
-      assert (state->sort.tag == BTOR2_TAG_SORT_array);
       Btor2Line *li =
           btor2parser_get_line_by_id (model, state->sort.array.index);
       Btor2Line *le =
@@ -1657,6 +1654,11 @@ parse_input_part (int64_t k)
     else
     {
       assert (current_state[input->id].type == BtorSimState::Type::ARRAY);
+      if (BTOR2_EMPTY_STACK (array_index))
+      {
+        parse_error ("expected array index assignment for input '%" PRId64 "'",
+                     input_pos);
+      }
       BtorSimBitVector *idx = btorsim_bv_char_to_bv (array_index.start);
       BtorSimBitVector *val = btorsim_bv_char_to_bv (constant.start);
       lineno++;
