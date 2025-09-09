@@ -1662,15 +1662,13 @@ parse_input_part (int64_t k)
       lineno++;
       charno = saved_charno;
 
-      BtorSimArrayModel *am = nullptr;
       if (!current_state[input->id].array_state)
       {
-        am = new BtorSimArrayModel (idx->width, val->width);
+        update_current_state (input->id,
+                              new BtorSimArrayModel (idx->width, val->width));
       }
-      else
-      {
-        am = current_state[input->id].array_state->write (idx, val);
-      }
+      BtorSimArrayModel *am =
+          current_state[input->id].array_state->write (idx, val);
       update_current_state (input->id, am);
     }
   }
