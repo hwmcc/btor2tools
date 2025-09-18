@@ -126,8 +126,7 @@ split_file(std::string infilename, bool overwrite)
   for (size_t lineno : bad)
   {
     std::stringstream ss;
-    ss << prefix << "-p" << std::setfill('0') << std::setw(ndigits) << num_prop
-       << suffix;
+    ss << prefix << "-p" << num_prop << suffix;
 
     std::string outfilename = ss.str();
 
