@@ -1021,9 +1021,13 @@ simulate_step (int64_t k, int32_t randomize_states_that_are_inputs)
     for (size_t i = 0; i < constraints.size (); i++)
     {
       Btor2Line *constraint = constraints[i];
-      BtorSimState s        = current_state[constraint->args[0]];
+      int64_t id            = constraint->args[0];
+      int32_t sign          = id < 0 ? -1 : 1;
+      if (sign < 0) id = -id;
+      BtorSimState s = current_state[id];
       assert (s.type == BtorSimState::Type::BITVEC);
-      if (!btorsim_bv_is_zero (s.bv_state)) continue;
+      if (sign > 0 && btorsim_bv_is_true (s.bv_state)) continue;
+      if (sign < 0 && btorsim_bv_is_false (s.bv_state)) continue;
       msg (1,
            "constraint(%" PRId64 ") '%" PRId64 " constraint %" PRId64
            "' violated at time %" PRId64,
@@ -1042,9 +1046,13 @@ simulate_step (int64_t k, int32_t randomize_states_that_are_inputs)
       int64_t r = reached_bads[i];
       if (r >= 0) continue;
       Btor2Line *bad = bads[i];
-      BtorSimState s = current_state[bad->args[0]];
+      int64_t id     = bad->args[0];
+      int32_t sign   = id < 0 ? -1 : 1;
+      if (sign < 0) id = -id;
+      BtorSimState s = current_state[id];
       assert (s.type == BtorSimState::Type::BITVEC);
-      if (btorsim_bv_is_zero (s.bv_state)) continue;
+      if (sign > 0 && btorsim_bv_is_false (s.bv_state)) continue;
+      if (sign < 0 && btorsim_bv_is_true (s.bv_state)) continue;
       int64_t bound = reached_bads[i];
       if (bound >= 0) continue;
       reached_bads[i] = k;
