@@ -42,7 +42,7 @@ Btor2LineIterator it;
 Btor2Line* line;
 
 parser = btor2parser_new ();
-if (!btor2parser_read_lines (reader, input_file))
+if (!btor2parser_read_lines (parser, input_file))
 {
   // parse error
   const char *err = btor2parser_error (parser);
@@ -55,7 +55,6 @@ while ((line = btor2parser_iter_next (&it)))
   // process line
 }
 btor2parser_delete (parser);
-
 ```
 
 For a simple example on how to use the BTOR2 parser, refer to `src/catbtor.c`.  
