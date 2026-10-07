@@ -60,7 +60,7 @@ macro(add_check_c_cxx_flag flag)
 endmacro()
 
 macro(add_required_cxx_flag flag)
-  string(REGEX REPLACE "[-=]" "_" flagnamename ${flag})
+  string(REGEX REPLACE "[-=]" "_" flagname ${flag})
   check_cxx_compiler_flag("${flag}" HAVE_FLAG${flagname})
   if (NOT HAVE_FLAG${flagname})
     message(FATAL_ERROR "Required compiler flag ${flag} not supported")
