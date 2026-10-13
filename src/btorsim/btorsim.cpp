@@ -1492,15 +1492,19 @@ parse_state_part (int64_t k)
         else
         {
           BtorSimBitVector *element;
-          if (is_const_init)
+          if (tmp.type == BtorSimState::Type::BITVEC)
           {
-            assert (tmp.type == BtorSimState::Type::BITVEC);
+            // init <array> <state> <bv>: every element equals the constant,
+            // including elements that are not assigned in the witness
+            BtorSimArrayModel *am = current_state[state->id].array_state;
+            if (!am->const_init) am->const_init = btorsim_bv_copy (tmp.bv_state);
             element = btorsim_bv_copy (tmp.bv_state);
           }
           else
           {
             assert (tmp.type == BtorSimState::Type::ARRAY);
-            element = tmp.array_state->check (idx);
+            element = is_const_init ? tmp.array_state->get_const_init ()
+                                    : tmp.array_state->check (idx);
           }
           if (element)
           {
